@@ -1279,7 +1279,7 @@ function App() {
                     <h3>
                       <span className="copilot-lottie-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', flexShrink: 0 }}>
                         <dotlottie-player
-                          src="https://lottie.host/198a8b75-7a15-4e49-bb45-a7de56998128/ebvGxe84JU.lottie"
+                          src="https://lottie.host/0393fb45-d540-4bf9-a5b1-9503f6a50d37/IIT4W9WNVr.lottie"
                           background="transparent"
                           speed="1"
                           style={{ width: '40px', height: '40px' }}
