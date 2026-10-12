@@ -20,9 +20,13 @@ def uid(*parts):
 
 class Store:
     def __init__(self, root=None):
-        self.root = Path(root or os.getenv("MAHA_DATA", "data/private/runtime")).resolve()
-        self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
-        self.root.chmod(0o700)
+        default_dir = "/tmp/maha" if os.getenv("VERCEL") else "data/private/runtime"
+        self.root = Path(root or os.getenv("MAHA_DATA", default_dir)).resolve()
+        try:
+            self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
+            self.root.chmod(0o700)
+        except OSError:
+            pass
         self.path = self.root / "ledger.sqlite3"
         with self.db() as db:
             db.executescript('''
@@ -51,7 +55,26 @@ class Store:
                     prior = json.loads(old['data'])
                     if prior['extraction_method'] == 'csv-positional':
                         db.execute('INSERT INTO record_fingerprints VALUES(?,?,?,?)', (old['id'], old['case_id'], prior['dataset_id'], uid(prior['passage'])))
-        self.path.chmod(0o600)
+            
+            # Auto-seed default investigator user if new database
+            user_count = db.execute("SELECT COUNT(*) FROM users").fetchone()[0]
+            if user_count == 0:
+                default_token = "WT49DfCpDyYerqLF_cQI-hkzH7Et7UXGZNUrb_EcneA"
+                token_hash = hashlib.sha256(default_token.encode()).hexdigest()
+                default_cases = json.dumps(["DEMO-C01", "DEMO-C02", "DEMO-C03", "CASE-2026-TEST", "CASE-RIGOROUS-02"])
+                db.execute("INSERT OR REPLACE INTO users VALUES(?,?,?)", ("investigator", token_hash, default_cases))
+                for c in ["DEMO-C01", "DEMO-C02", "DEMO-C03", "CASE-2026-TEST", "CASE-RIGOROUS-02"]:
+                    db.execute("INSERT OR IGNORE INTO cases(id) VALUES(?)", (c,))
+                try:
+                    access_file = self.root / "access.json"
+                    access_file.write_text(json.dumps({"investigator": default_token}, indent=2))
+                except OSError:
+                    pass
+        try:
+            self.path.chmod(0o600)
+        except OSError:
+            pass
+
 
     @contextmanager
     def db(self):

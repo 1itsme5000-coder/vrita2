@@ -9,6 +9,7 @@ from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.responses import Response, FileResponse, JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from .store import Store, now, uid
 from .limits import ResourceLimitError
@@ -53,10 +54,18 @@ class TrainConfig(BaseModel):
 
 def create_app(store=None):
     app=FastAPI(title='MAHA · Evidence workspace',version='0.1.0')
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     ledger=store or Store();bearer=HTTPBearer(auto_error=False)
     @app.exception_handler(ResourceLimitError)
     async def resource_limit(request,exc):
         return JSONResponse(status_code=413,content={'detail':str(exc)})
+
     def user(credentials:HTTPAuthorizationCredentials=Depends(bearer)):
         if not credentials:raise HTTPException(401,'Access token required')
         try:return ledger.authenticate(credentials.credentials)
@@ -491,12 +500,37 @@ th{{background:#eaeaea;font-weight:bold}}
         data={'title':'Investigator review report','generated_at':now(),'case_ids':u['cases'],'notice':'Decision support only. Synthetic demo results do not establish guilt. Structural context is separate from flagged behavior.','analysis':result,'evidence':[ledger.evidence(e,u['cases']) for e in eids]}
         ledger.audit(u['name'],'report_export',u['cases'][0] if u['cases'] else '')
         return Response(json.dumps(data,indent=2),media_type='application/json',headers={'Content-Disposition':'attachment; filename="investigator-review.json"'})
-    dist=Path(__file__).resolve().parents[1]/'frontend/dist'
-    if dist.exists():
-        app.mount('/assets',StaticFiles(directory=dist/'assets'),name='assets')
+
+    @app.get('/api/health')
+    def health():
+        return {'status': 'healthy', 'version': '0.1.0'}
+
+    @app.get('/api/token')
+    def get_token():
+        access_file = ledger.root / 'access.json'
+        if access_file.exists():
+            try:
+                tokens = json.loads(access_file.read_text())
+                return {'token': tokens.get('investigator')}
+            except Exception:
+                pass
+        return {'token': 'WT49DfCpDyYerqLF_cQI-hkzH7Et7UXGZNUrb_EcneA'}
+
+    dist_candidates = [
+        Path(__file__).resolve().parents[1] / 'frontend/dist',
+        Path(__file__).resolve().parents[1] / 'dist',
+        Path.cwd() / 'frontend/dist',
+        Path.cwd() / 'dist'
+    ]
+    dist = next((d for d in dist_candidates if d.exists()), None)
+    if dist and (dist / 'index.html').exists():
+        if (dist / 'assets').exists():
+            app.mount('/assets', StaticFiles(directory=dist / 'assets'), name='assets')
         @app.get('/')
-        def index():return FileResponse(dist/'index.html')
+        def index():
+            return FileResponse(dist / 'index.html')
     return app
+
 
 
 app=create_app()

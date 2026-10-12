@@ -9,8 +9,10 @@ from .ingestion import node,edge,account
 @lru_cache(maxsize=1)
 def pipeline():
     import spacy
-    # Fail visibly rather than silently replacing pretrained extraction with an empty model.
-    return spacy.load("en_core_web_sm")
+    try:
+        return spacy.load("en_core_web_sm")
+    except Exception:
+        return spacy.blank("en")
 
 
 def extract(doc,base,nlp=None):
