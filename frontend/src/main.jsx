@@ -871,12 +871,12 @@ function App() {
                     onChange={e => setRawText(e.target.value)}
                   />
                   <div className="raw-text-footer">
-                    <span style={{ fontSize: '11px', color: '#688275' }}>
-                      Case Scope: <strong>{activeCase}</strong>
+                    <span style={{ fontSize: '11px', color: '#64748b' }}>
+                      Case Scope: <strong style={{ color: '#0f172a' }}>{activeCase}</strong>
                     </span>
                     <button
                       type="button"
-                      style={{ background: '#1c5247', color: '#fff', fontSize: '12px', padding: '10px 18px' }}
+                      className="btn-parse-nlp"
                       disabled={!rawText.trim() || busy}
                       onClick={handleRawTextImport}
                     >
@@ -1074,7 +1074,7 @@ function App() {
                     <h4>
                       <span>🎛️</span> Model Hyperparameters & Investigative Risk Weights Policy
                     </h4>
-                    <span style={{ fontSize: '11px', color: '#b09459' }}>
+                    <span className="tuning-toggle-btn">
                       {showTuning ? '▲ Hide Tuning' : '▼ Customize Weights & Anomaly Sensitivity'}
                     </span>
                   </div>
@@ -1094,7 +1094,7 @@ function App() {
                             value={contamination}
                             onChange={e => setContamination(parseFloat(e.target.value))}
                           />
-                          <small style={{ color: '#88a698' }}>Proportion of transactions flagged as anomalous.</small>
+                          <small>Proportion of transactions flagged as anomalous.</small>
                         </div>
                         <div className="tuning-item">
                           <div className="tuning-label">
@@ -1109,7 +1109,7 @@ function App() {
                             value={wFinancial}
                             onChange={e => setWFinancial(parseInt(e.target.value))}
                           />
-                          <small style={{ color: '#88a698' }}>Multi-hop loops and Isolation Forest score.</small>
+                          <small>Multi-hop loops and Isolation Forest score.</small>
                         </div>
                         <div className="tuning-item">
                           <div className="tuning-label">
@@ -1124,7 +1124,7 @@ function App() {
                             value={wCourt}
                             onChange={e => setWCourt(parseInt(e.target.value))}
                           />
-                          <small style={{ color: '#88a698' }}>PMLA, IPC 420/120B, warrants and LOCs.</small>
+                          <small>PMLA, IPC 420/120B, warrants and LOCs.</small>
                         </div>
                         <div className="tuning-item">
                           <div className="tuning-label">
@@ -1139,7 +1139,7 @@ function App() {
                             value={wCentrality}
                             onChange={e => setWCentrality(parseInt(e.target.value))}
                           />
-                          <small style={{ color: '#88a698' }}>Betweenness, PageRank, and CDR degree.</small>
+                          <small>Betweenness, PageRank, and CDR degree.</small>
                         </div>
                         <div className="tuning-item">
                           <div className="tuning-label">
@@ -1154,14 +1154,13 @@ function App() {
                             value={wCrossCase}
                             onChange={e => setWCrossCase(parseInt(e.target.value))}
                           />
-                          <small style={{ color: '#88a698' }}>Multi-case involvement & alias identity.</small>
+                          <small>Multi-case involvement & alias identity.</small>
                         </div>
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                         <button
                           type="button"
-                          className="quiet"
-                          style={{ fontSize: '10px', color: '#b09459' }}
+                          className="btn-tuning-reset"
                           onClick={() => {
                             setContamination(0.05);
                             setWFinancial(35);
