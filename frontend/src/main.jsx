@@ -1277,14 +1277,11 @@ function App() {
                 <div className="copilot-container">
                   <div className="copilot-header">
                     <h3>
-                      <span className="copilot-lottie-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', flexShrink: 0 }}>
-                        <dotlottie-player
-                          src="https://lottie.host/0393fb45-d540-4bf9-a5b1-9503f6a50d37/IIT4W9WNVr.lottie"
-                          background="transparent"
-                          speed="1"
-                          style={{ width: '40px', height: '40px' }}
-                          loop
-                          autoplay
+                      <span className="copilot-lottie-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '44px', height: '44px', flexShrink: 0, overflow: 'hidden' }}>
+                        <iframe
+                          src="https://lottie.host/embed/1f50be53-bbab-4714-9203-ee03f8fe47cf/DDNJAaolxB.lottie"
+                          style={{ width: '44px', height: '44px', border: 'none', background: 'transparent', pointerEvents: 'none', overflow: 'hidden' }}
+                          title="AI Investigator Copilot Animation"
                         />
                       </span>
                       AI Investigator Copilot / Query Assistant
