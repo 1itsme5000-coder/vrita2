@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Network } from 'vis-network';
 import { DataSet } from 'vis-data';
+import '@dotlottie/player-component';
 import './style.css';
 
 const colors = {
@@ -1256,7 +1257,7 @@ function App() {
                     <button
                       type="button"
                       className="btn-new-case"
-                      style={{ background: '#174c44', color: '#fff', fontSize: '12px', padding: '10px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                      style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', border: '1px solid #334155', color: '#fff', fontSize: '12px', padding: '10px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px', borderRadius: '8px', fontWeight: 600, cursor: 'pointer' }}
                       onClick={() => setShowTrainingStudio(true)}
                     >
                       ➕ Ingest More Records & Retrain →
@@ -1264,7 +1265,7 @@ function App() {
                     <button
                       type="button"
                       className="btn-sample"
-                      style={{ background: '#f8faf6', border: '1px solid #ccd8c7', color: '#2b5443', fontSize: '11px', padding: '9px 14px' }}
+                      style={{ background: '#ffffff', border: '1px solid #cbd5e1', color: '#334155', fontSize: '11px', padding: '9px 14px', borderRadius: '8px', fontWeight: 500, cursor: 'pointer' }}
                       onClick={openTemplateModal}
                     >
                       📥 Download Templates
@@ -1276,11 +1277,21 @@ function App() {
                 <div className="copilot-container">
                   <div className="copilot-header">
                     <h3>
-                      <span>🤖</span> AI Investigator Copilot / Query Assistant
+                      <span className="copilot-lottie-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', flexShrink: 0 }}>
+                        <dotlottie-player
+                          src="https://lottie.host/198a8b75-7a15-4e49-bb45-a7de56998128/ebvGxe84JU.lottie"
+                          background="transparent"
+                          speed="1"
+                          style={{ width: '40px', height: '40px' }}
+                          loop
+                          autoplay
+                        />
+                      </span>
+                      AI Investigator Copilot / Query Assistant
                     </h3>
                     <span className="copilot-badge">NCRB PS 26189 · EVIDENCE-GROUNDED</span>
                   </div>
-                  <p style={{ fontSize: '12px', color: '#a6c7b7', margin: '0 0 12px' }}>
+                  <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 12px' }}>
                     Ask forensic queries across judicial records, financial layering loops, and communication networks:
                   </p>
                   <div className="copilot-chips">
