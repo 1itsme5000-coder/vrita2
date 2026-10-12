@@ -65,6 +65,22 @@ function App() {
   const [token, setToken] = useState(() => localStorage.getItem('maha_token') || defaultToken);
   const [input, setInput] = useState(() => localStorage.getItem('maha_token') || defaultToken);
   const [me, setMe] = useState(null);
+
+  // Dark Canvas / Theme Mode
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('maha_theme');
+    if (saved) return saved === 'dark';
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('maha_theme', darkMode ? 'dark' : 'light');
+    if (darkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }, [darkMode]);
   const [casesList, setCasesList] = useState([]);
   const [activeCase, setActiveCase] = useState('');
   const [graph, setGraph] = useState(null);
@@ -439,7 +455,17 @@ function App() {
 
   if (!me)
     return (
-      <main className="login">
+      <main className={`login ${darkMode ? 'dark-theme' : ''}`}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' }}>
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={() => setDarkMode(prev => !prev)}
+            title={darkMode ? "Switch to light canvas" : "Switch to dark canvas"}
+          >
+            <span>{darkMode ? '☀️' : '🌙'}</span> {darkMode ? 'Light Canvas' : 'Dark Canvas'}
+          </button>
+        </div>
         <div className="wordmark">
           M<span>✳</span>HA
         </div>
@@ -518,7 +544,7 @@ function App() {
   });
 
   return (
-    <div className="shell">
+    <div className={`shell ${darkMode ? 'dark-theme' : ''}`}>
       <aside className="sidebar">
         <div className="wordmark">
           M<span>✳</span>HA
@@ -552,6 +578,15 @@ function App() {
           ))}
         </nav>
         <div className="sidebar-footer">
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            style={{ width: '100%', justifyContent: 'center', marginBottom: '14px' }}
+            onClick={() => setDarkMode(prev => !prev)}
+            title={darkMode ? "Switch to light canvas" : "Switch to dark canvas"}
+          >
+            <span>{darkMode ? '☀️' : '🌙'}</span> {darkMode ? 'Light Canvas' : 'Dark Canvas'}
+          </button>
           <span className="dot" /> Local workspace
           <p>
             {me.name} · {casesList.length} cases
@@ -576,7 +611,15 @@ function App() {
           <span>
             Workspace <b>/ {tab}</b>
           </span>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={() => setDarkMode(prev => !prev)}
+              title={darkMode ? "Switch to light canvas" : "Switch to dark canvas"}
+            >
+              <span>{darkMode ? '☀️' : '🌙'}</span> {darkMode ? 'Light Canvas' : 'Dark Canvas'}
+            </button>
             <span className="badge">{tab === 'Benchmarks' ? 'SEPARATE BENCHMARKS' : 'SYNTHETIC DEMO'}</span>
             <button className="quiet" onClick={exportReport}>
               Export report ↗
